@@ -1,0 +1,16 @@
+﻿@page "/companyitem"
+
+@inject NavigationManager NavigationManager
+
+<span class="material-label" @onclick="OpenCompanyProfile">@CompanySymbol.Description</span>
+
+@code {
+    
+    [Parameter]
+    public ThreeFourteen.Finnhub.Client.Model.Symbol CompanySymbol { get; set; }
+
+    private void OpenCompanyProfile()
+    {
+        NavigationManager.NavigateTo($"/companies/{CompanySymbol.CandleSymbol}");
+    }
+}

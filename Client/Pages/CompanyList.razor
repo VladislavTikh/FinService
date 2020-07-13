@@ -1,0 +1,56 @@
+﻿@page "/companies"
+
+@using MatBlazor
+@using FinService.Shared.Models
+
+@inject HttpClient _client
+
+<h3>List Of Companies</h3>
+
+@if (_companyGroups == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MatAccordion>
+        @foreach (var group in _companyGroups)
+        {
+        <MatExpansionPanel LazyRendering="true">
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>
+                    @group.FirstLetter
+                </MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                @if (group.Symbols != null)
+                {
+                    foreach (var symbol in group.Symbols)
+                    {              
+                        <CompanyItem CompanySymbol="@symbol"></CompanyItem>
+                        <MatDivider Padded="true"></MatDivider>
+                    }
+                }
+                else
+                {
+                    <p>Fetching Companies...</p>
+                }
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+        }
+    </MatAccordion>
+}
+
+@code {
+
+    private IEnumerable<CompaniesGroup> _companyGroups;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _companyGroups = await _client.GetFromJsonAsync<IEnumerable<CompaniesGroup>>("api/companies");
+    }
+
+    private void OpenCompanyProfile(ThreeFourteen.Finnhub.Client.Model.Symbol symbol)
+    {
+    }
+}

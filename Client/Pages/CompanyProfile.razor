@@ -1,0 +1,42 @@
+﻿@page "/companies/{companySymbol}"
+
+@inject HttpClient _client
+
+<h3>Company Profile</h3>
+@if(_company != null)
+{
+<div>
+    <MatCard Class="demo-mat-card">
+        <MatCardContent Class="demo-mat-card-content">
+            <MatCardMedia Wide="true" ImageUrl="@_company.Logo">
+            </MatCardMedia>
+            <MatHeadline6 Class="demo-mat-card-clean-margin">
+                @_company.Name
+            </MatHeadline6>
+            <MatHeadline4 Class="demo-mat-card-clean-margin">
+                @_company.Country
+            </MatHeadline4>
+            <MatHeadline2 Class="demo-mat-card-clean-margin">
+                @_company.FinnHubIndustry
+            </MatHeadline2>
+        </MatCardContent>
+    </MatCard>
+</div>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code { 
+
+    [Parameter]
+    public string CompanySymbol { get; set; }
+
+    private FinService.Shared.Models.CompanyProfile _company;
+
+    protected  override async Task OnInitializedAsync()
+    {
+        _company = await _client.GetFromJsonAsync<FinService.Shared.Models.CompanyProfile>($"api/companies/{CompanySymbol}");
+    }
+}
